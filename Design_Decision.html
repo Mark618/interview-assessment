@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>design_decision</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="Design_Decision_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Design_Decision_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Design_Decision_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Design_Decision_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="Design_Decision_files/libs/quarto-html/popper.min.js"></script>
+<script src="Design_Decision_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Design_Decision_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Design_Decision_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Design_Decision_files/libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Design_Decision_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Design_Decision_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Design_Decision_files/libs/bootstrap/bootstrap-f2dee159b124ec4ba9ed4696d7576180.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="design-decisions-ai-word-chain-game-n8n-implementation" class="level1">
+<h1><strong>Design Decisions – AI Word Chain Game (n8n Implementation)</strong></h1>
+<section id="architecture-design" class="level2">
+<h2 class="anchored" data-anchor-id="architecture-design"><strong>1. Architecture Design</strong></h2>
+<section id="workflow-based-architecture" class="level3">
+<h3 class="anchored" data-anchor-id="workflow-based-architecture"><strong>1.1 Workflow-Based Architecture</strong></h3>
+<p>The system is built entirely using n8n workflows, leveraging:</p>
+<ul>
+<li><p>Chat Trigger as the entry point</p></li>
+<li><p>Modular nodes (Switch, IF, Code, AI Agent) for logic control</p></li>
+<li><p>Google Sheets for persistence</p></li>
+</ul>
+<p>This approach was chosen for:</p>
+<ul>
+<li><p>Rapid development</p></li>
+<li><p>Low infrastructure overhead</p></li>
+<li><p>Easy visualization of logic flow</p></li>
+</ul>
+<hr>
+</section>
+<section id="modular-design" class="level3">
+<h3 class="anchored" data-anchor-id="modular-design"><strong>1.2 Modular Design</strong></h3>
+<p>The workflow is divided into logical components:</p>
+<ul>
+<li><p><strong>User Interaction Layer</strong></p>
+<ul>
+<li><p>Handles chat messages and responses</p>
+<ul>
+<li>Managed via Chat nodes</li>
+</ul></li>
+</ul></li>
+<li><p><strong>Command Processing Layer</strong></p>
+<ul>
+<li><p>Parses input (<code>SplitInput</code> node)</p></li>
+<li><p>Routes commands using <code>Switch</code> node</p></li>
+</ul></li>
+<li><p><strong>Game Logic Layer</strong></p>
+<ul>
+<li><p>Word validation (Code node + AI Agent)</p></li>
+<li><p>Score calculation and round tracking</p></li>
+</ul></li>
+<li><p><strong>Persistence Layer</strong></p>
+<ul>
+<li><p>Google Sheets used for storing:</p>
+<ul>
+<li><p>Game state (<code>games_table</code>)</p></li>
+<li><p>Player stats (<code>player_stats</code>)</p></li>
+</ul></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="state-management-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="state-management-strategy"><strong>2. State Management Strategy</strong></h2>
+</section>
+<section id="session-based-state" class="level2">
+<h2 class="anchored" data-anchor-id="session-based-state"><strong>2.1 Session-Based State</strong></h2>
+<ul>
+<li><p>Each game session is identified using <code>sessionId</code> from the chat trigger</p></li>
+<li><p>Game progress is stored in Google Sheets using:</p>
+<ul>
+<li><p><code>game_id</code></p></li>
+<li><p><code>current_round</code></p></li>
+<li><p><code>score</code></p></li>
+<li><p><code>outcome</code> (last word)</p></li>
+</ul></li>
+</ul>
+<section id="persistence-design" class="level3">
+<h3 class="anchored" data-anchor-id="persistence-design"><strong>2.2 Persistence Design</strong></h3>
+<p>Instead of in-memory storage, persistent storage ensures:</p>
+<ul>
+<li><p>Game continuity across messages</p></li>
+<li><p>Stateless workflow execution</p></li>
+<li><p>Easier debugging and inspection</p></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="command-handling" class="level2">
+<h2 class="anchored" data-anchor-id="command-handling"><strong>3. Command Handling</strong></h2>
+<section id="input-parsing" class="level3">
+<h3 class="anchored" data-anchor-id="input-parsing"><strong>3.1 Input Parsing</strong></h3>
+<ul>
+<li><p>Implemented using a custom Code node (<code>SplitInput</code>)</p></li>
+<li><p>Extracts:</p>
+<ul>
+<li><p>Command (start, stats, help, quit)</p></li>
+<li><p>Difficulty level</p></li>
+<li><p>Regex-based parsing ensures flexibility</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="command-routing" class="level3">
+<h3 class="anchored" data-anchor-id="command-routing"><strong>3.2 Command Routing</strong></h3>
+<ul>
+<li><p><code>Switch</code> node routes requests into:</p>
+<ul>
+<li><p>Start Game</p></li>
+<li><p>Stats</p></li>
+<li><p>Help</p></li>
+<li><p>Quit</p></li>
+</ul></li>
+</ul>
+<p>This separation keeps logic clean and maintainable.</p>
+<hr>
+</section>
+</section>
+<section id="game-logic-design" class="level2">
+<h2 class="anchored" data-anchor-id="game-logic-design"><strong>4. Game Logic Design</strong></h2>
+<section id="word-validation" class="level3">
+<h3 class="anchored" data-anchor-id="word-validation"><strong>4.1 Word Validation</strong></h3>
+<p>Two-step validation approach:</p>
+<ol type="1">
+<li><p><strong>Rule-based validation (Code Node)</strong></p>
+<ul>
+<li><p>Ensures correct format (<code>submit [word]</code>)</p></li>
+<li><p>Checks first-letter rule against previous word</p></li>
+</ul></li>
+<li><p><strong>AI-based validation (AI Agent)</strong></p>
+<ul>
+<li><p>Validates if word is real English word</p></li>
+<li><p>Applies difficulty constraints</p></li>
+<li><p>Calculates score</p></li>
+</ul></li>
+<li><p>This hybrid approach ensures:</p>
+<ol type="1">
+<li><p>Deterministic rule enforcement</p></li>
+<li><p>Flexible and intelligent validation via AI</p></li>
+</ol></li>
+</ol>
+<hr>
+</section>
+<section id="difficulty-handling" class="level3">
+<h3 class="anchored" data-anchor-id="difficulty-handling"><strong>4.2 Difficulty Handling</strong></h3>
+<p>Difficulty is enforced via AI prompt:</p>
+<ul>
+<li><p>Easy: 4–6 letters</p></li>
+<li><p>Medium: 6–8 letters</p></li>
+<li><p>Hard: 8–12 letters + rare endings</p></li>
+</ul>
+<p>This reduces complexity in code and leverages LLM flexibility.</p>
+<hr>
+</section>
+<section id="scoring-system" class="level3">
+<h3 class="anchored" data-anchor-id="scoring-system"><strong>4.3 Scoring System</strong></h3>
+<p>Score is computed by AI Agent based on:</p>
+<ul>
+<li><p>Base score: 10 points</p></li>
+<li><p>Length bonus</p></li>
+<li><p>Creativity bonus (rare letters)</p></li>
+</ul>
+<p>The score is accumulated and updated in storage.</p>
+<hr>
+</section>
+</section>
+<section id="data-storage-design" class="level2">
+<h2 class="anchored" data-anchor-id="data-storage-design"><strong>5. Data Storage Design</strong></h2>
+<section id="choice-of-google-sheets" class="level3">
+<h3 class="anchored" data-anchor-id="choice-of-google-sheets"><strong>5.1 Choice of Google Sheets</strong></h3>
+<p>Google Sheets was chosen because:</p>
+<ul>
+<li><p>Easy integration with n8n</p></li>
+<li><p>No setup required</p></li>
+<li><p>Human-readable and easy to debug</p></li>
+</ul>
+<hr>
+</section>
+<section id="schema-design" class="level3">
+<h3 class="anchored" data-anchor-id="schema-design"><strong>5.2 Schema Design</strong></h3>
+<section id="games-table" class="level4">
+<h4 class="anchored" data-anchor-id="games-table"><strong>Games Table</strong></h4>
+<ul>
+<li><p><code>game_id</code></p></li>
+<li><p><code>username</code></p></li>
+<li><p><code>difficulty</code></p></li>
+<li><p><code>current_round</code></p></li>
+<li><p><code>score</code></p></li>
+<li><p><code>outcome</code></p></li>
+<li><p><code>timestamp</code></p></li>
+</ul>
+</section>
+<section id="player-stats-table" class="level4">
+<h4 class="anchored" data-anchor-id="player-stats-table"><strong>Player Stats Table</strong></h4>
+<ul>
+<li><p><code>username</code></p></li>
+<li><p><code>total_games</code></p></li>
+<li><p><code>best_score</code></p></li>
+<li><p><code>avg</code></p></li>
+<li><p><code>difficulty</code></p></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="trade-offs" class="level3">
+<h3 class="anchored" data-anchor-id="trade-offs"><strong>5.3 Trade-offs</strong></h3>
+<ul>
+<li><p>Pros:</p>
+<ul>
+<li><p>Simplicity</p></li>
+<li><p>Fast setup</p></li>
+</ul></li>
+<li><p>Cons:</p>
+<ul>
+<li><p>Limited scalability</p></li>
+<li><p>No strong consistency guarantees</p></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="game-flow-design" class="level2">
+<h2 class="anchored" data-anchor-id="game-flow-design"><strong>6. Game Flow Design</strong></h2>
+<section id="game-initialization" class="level3">
+<h3 class="anchored" data-anchor-id="game-initialization"><strong>6.1 Game Initialization</strong></h3>
+<ul>
+<li><p>User enters name → extracted via AI</p></li>
+<li><p>Game starts with <code>start [difficulty]</code></p></li>
+<li><p>New record created if none exists</p></li>
+</ul>
+<hr>
+</section>
+<section id="game-loop" class="level3">
+<h3 class="anchored" data-anchor-id="game-loop"><strong>6.2 Game Loop</strong></h3>
+<ul>
+<li><p>User submits word</p></li>
+<li><p>Validation pipeline:</p>
+<ul>
+<li><p>Format check</p></li>
+<li><p>Rule validation</p></li>
+<li><p>AI validation</p></li>
+</ul></li>
+<li><p>Score updated</p></li>
+<li><p>Round incremented</p>
+<hr></li>
+</ul>
+</section>
+<section id="game-termination" class="level3">
+<h3 class="anchored" data-anchor-id="game-termination"><strong>6.3 Game Termination</strong></h3>
+<ul>
+<li><p>Ends when:</p>
+<ul>
+<li><p>10 rounds completed</p></li>
+<li><p>User quits</p></li>
+</ul></li>
+</ul>
+<p>Final stats are saved into <code>player_stats</code>.</p>
+<hr>
+</section>
+</section>
+<section id="error-handling-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="error-handling-strategy"><strong>7. Error Handling Strategy</strong></h2>
+<ul>
+<li><p>Invalid input handled early (Code node)</p></li>
+<li><p>AI output validated using structured parser</p></li>
+<li><p>Fallback responses:</p>
+<ul>
+<li><p>Invalid format → prompt correction</p></li>
+<li><p>Invalid word → explanation</p></li>
+</ul></li>
+</ul>
+<p>This ensures robustness and better user experience.</p>
+<hr>
+</section>
+<section id="ai-integration-design" class="level2">
+<h2 class="anchored" data-anchor-id="ai-integration-design"><strong>8. AI Integration Design</strong></h2>
+<section id="model-choice" class="level3">
+<h3 class="anchored" data-anchor-id="model-choice"><strong>8.1 Model Choice</strong></h3>
+<ul>
+<li><p>Google Gemini used for:</p>
+<ul>
+<li><p>Name extraction</p></li>
+<li><p>Word validation</p></li>
+<li><p>Scoring</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="prompt-engineering" class="level3">
+<h3 class="anchored" data-anchor-id="prompt-engineering"><strong>8.2 Prompt Engineering</strong></h3>
+<ul>
+<li><p>Clear system prompts define:</p>
+<ul>
+<li><p>Rules</p></li>
+<li><p>Difficulty constraints</p></li>
+<li><p>Output format</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="structured-output" class="level3">
+<h3 class="anchored" data-anchor-id="structured-output"><strong>8.3 Structured Output</strong></h3>
+<ul>
+<li><p>JSON schema enforced using Output Parser</p></li>
+<li><p>Ensures reliable downstream processing</p></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="alternatives-considered" class="level2">
+<h2 class="anchored" data-anchor-id="alternatives-considered"><strong>9. Alternatives Considered</strong></h2>
+<section id="database-postgresql-sqlite" class="level3">
+<h3 class="anchored" data-anchor-id="database-postgresql-sqlite"><strong>9.1 Database (PostgreSQL / SQLite)</strong></h3>
+<ul>
+<li><p>More scalable and structured</p></li>
+<li><p>Not chosen due to:</p>
+<ul>
+<li><p>Increased setup complexity</p></li>
+<li><p>Overkill for prototype</p></li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="fully-rule-based-validation" class="level3">
+<h3 class="anchored" data-anchor-id="fully-rule-based-validation"><strong>9.2 Fully Rule-Based Validation</strong></h3>
+<ul>
+<li><p>More deterministic</p></li>
+<li><p>Not chosen because:</p>
+<ul>
+<li><p>Hard to validate real English words</p></li>
+<li><p>Less flexible for scoring</p></li>
+</ul></li>
+</ul>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

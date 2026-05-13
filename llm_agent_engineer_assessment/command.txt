@@ -1,0 +1,1 @@
+uvicorn api:app --host localhost --port 7700 --workers 1

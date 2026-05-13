@@ -1,0 +1,1628 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.command }}",
+                    "rightValue": "=start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "97c8dee7-2660-4a47-af82-bb8d41ef2a9c"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "31bb134d-f742-432c-8591-ca75cad9af77",
+                    "leftValue": "={{ $json.command }}",
+                    "rightValue": "stats",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "3e9a8d13-d393-4df2-97ad-431dc0383e60",
+                    "leftValue": "={{ $json.command }}",
+                    "rightValue": "help",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "d083af16-e86a-4ea0-b092-1343946dad1c",
+                    "leftValue": "={{ $json.command }}",
+                    "rightValue": "quit",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        752,
+        -448
+      ],
+      "id": "7b6f8ab8-d372-4582-9025-0441310071db",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I",
+          "mode": "list",
+          "cachedResultName": "datastorage",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "games_table",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "game_id": "={{ $('When chat message received').item.json.sessionId }}",
+            "difficulty": "={{ $('SplitInput').item.json.difficulty }}",
+            "current_round": "1",
+            "score": "0",
+            "timestamp": "={{ $now }}",
+            "username": "={{ $('Switch').item.json.user_name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "game_id",
+              "displayName": "game_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "username",
+              "displayName": "username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "difficulty",
+              "displayName": "difficulty",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "current_round",
+              "displayName": "current_round",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "outcome",
+              "displayName": "outcome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1456,
+        -1200
+      ],
+      "id": "59b94f46-1a1b-467a-ad2d-8888d04f33cd",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1B3Xb59oQRMs67bt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "message": "=Nice to meet you,  {{$('Information Extractor').item.json.output.user_name }}! 😄\n\nWhat would you like to do today?\n\n🎮 **Start Game**\nstart [difficulty]\n* `easy`\n* `medium`\n* `hard`\n\n📊 **Other Options**\n\n* `stats` – View your progress\n* `leaderboard` – See top players\n* `help` – Learn how to play\n* `quit` – Exit the game\n\nJust type your choice and let’s get started!\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        352,
+        -128
+      ],
+      "id": "bc2c25ed-7b19-494f-a9c8-7b0f02a25338",
+      "name": "Chat1",
+      "webhookId": "a37356b7-7b44-435d-a4f5-16db0da82727"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseMode": "responseNodes"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -1472,
+        -368
+      ],
+      "id": "1c38f04b-9f21-4210-a2b0-5c5a66a30ad6",
+      "name": "When chat message received",
+      "webhookId": "5b3db4c9-a3cb-4098-b840-2d4927fce8c0"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "message": "👋 Welcome to Word Chain Bot!\n\nI’m here to challenge your vocabulary and keep the fun going 🔤✨\n\nBefore we begin, how should I call you?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        -1040,
+        -368
+      ],
+      "id": "46b353c1-22f2-46f7-b36e-970c2f3d2530",
+      "name": "Chat",
+      "webhookId": "cebc92ee-504f-4e48-b008-f593cb289ae0"
+    },
+    {
+      "parameters": {
+        "text": "=Get user name from {{ $json.chatInput }} and return in Json format. ",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "user_name",
+              "description": "Get the user name or something that most likely to be a name.",
+              "required": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        -576,
+        -368
+      ],
+      "id": "973000a0-7bb0-4f88-be59-48e4a8e7a70e",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "message": "Thanks for using!",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        912,
+        320
+      ],
+      "id": "02b063bf-d467-4649-8d0c-add4e1a24ce0",
+      "name": "Chat3",
+      "webhookId": "fcc14be6-eea4-4cbf-92f1-498cad79b214"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0b076f19-8a41-4dbe-84c1-4d7b542af99d",
+              "leftValue": "={{ $('checkRecord').item.json}}",
+              "rightValue": "=1",
+              "operator": {
+                "type": "object",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1232,
+        -1024
+      ],
+      "id": "a981dab9-6eac-40f1-8ce4-b72f081b27d2",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "message": "=Game started on {{ $('SplitInput').item.json.difficulty }} mode! Round {{ $json.current_round }} of 10. Give me your word.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        2096,
+        -1088
+      ],
+      "id": "e73f4356-2814-441e-91bf-75a651daaacd",
+      "name": "Chat4",
+      "webhookId": "51276a76-d836-4e26-a298-4e662cd09a05"
+    },
+    {
+      "parameters": {
+        "message": "Current Leaderboard\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        1728,
+        -752
+      ],
+      "id": "b1ac6945-5962-461c-a583-234ebcc97a56",
+      "name": "Leaderboard Message",
+      "webhookId": "673182ee-7802-4b56-8293-cd7d1f90946f"
+    },
+    {
+      "parameters": {
+        "jsCode": "const userinput = $input.first().json.chatInput.toLowerCase().trim();\nconst match = userinput.match(/^submit\\s+(\\S+)$/);\n\nconst lastWord = $('checkRecord').first().json.outcome;\nconst difficulty = $('checkRecord').first().json.difficulty;\n\nlet isValid = true;\nlet errorReason = \"\";\nlet userWord = null;\n\nif (match) {\n  userWord = match[1];\n  if (lastWord && lastWord.length > 0) {\n      const lastLetter = lastWord.slice(-1);      \n      if (!userWord.startsWith(lastLetter)) {\n          isValid = false;\n          errorReason = `Your word must start with the letter \"${lastLetter.toUpperCase()}\".`;\n      }\n  }\n} \nelse {\n    isValid = false;\n    errorReason = \"Please use the format: submit [word]\";\n}\n\nreturn [{\n    json: {\n        isValid,\n        errorReason,\n        userWord,\n        difficulty,\n        current_round: $('checkRecord').first().json.current_round\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1936,
+        -1552
+      ],
+      "id": "71aefe11-6b53-4c18-80ff-4e03cae964b4",
+      "name": "WordGameFirstFilter"
+    },
+    {
+      "parameters": {
+        "message": "={{ $json.errorReason }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        2448,
+        -1216
+      ],
+      "id": "8158b935-1b45-44d5-8541-88a1d7ddfdb2",
+      "name": "Submit Error",
+      "webhookId": "345c11e8-ecd5-4016-bd45-e27cabbcee3f"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=User's Word: {{ $('WordGameFirstFilter').item.json.userWord }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Role: You are an expert Word Chain Game engine.\n\nContext: > - Current Difficulty: {{ $('WordGameFirstFilter').item.json.difficulty }}\n\n    User's Word: {{ $('WordGameFirstFilter').item.json.userWord }}\n\n    Rule: Every word must be a real English word.\n\n    Scoring context: 10 base points. +1 per letter over 5. +5 bonus for \"creative\" words (rare letters like Z, Q, X, J).\n\nYour Task:\n\n    Validate: Check if the user's word \"{{ $('WordGameFirstFilter').item.json.userWord }}\" is a real English word.\n\n    Difficulty Check: >    \n      - Easy: 4-6 letters.\n\n      - Medium: 6-8 letters.\n\n      - Hard: 8-12 letters AND should end in Q, X, Z, or J if possible.\n\n    Response: > - If invalid, explain why.\n\n        If valid, calculate the user's score for this word."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2480,
+        -1936
+      ],
+      "id": "83aedfb3-4b58-454e-ae4a-db90e96e1587",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"isValid\": true, \n  \"userScore\": 15, \n  \"userWord\": \"sunny\", \n  \"message\": \"Great\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2848,
+        -1824
+      ],
+      "id": "bae8e8bc-823c-43ff-8d17-31e23f515efa",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "message": "Invalid Word",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        2608,
+        -1376
+      ],
+      "id": "967535d9-e622-4655-b6a8-4e0afc83bd4c",
+      "name": "Invalid Word",
+      "webhookId": "345c11e8-ecd5-4016-bd45-e27cabbcee3f"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I",
+          "mode": "list",
+          "cachedResultName": "datastorage",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "games_table",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "game_id",
+              "lookupValue": "={{ $('When chat message received').item.json.sessionId }}"
+            },
+            {
+              "lookupColumn": "difficulty",
+              "lookupValue": "={{ $json.difficulty }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        928,
+        -1024
+      ],
+      "id": "10d1c501-867f-431d-9739-945b7832edc1",
+      "name": "checkRecord",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1B3Xb59oQRMs67bt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6d37001f-624e-4bb4-ae6a-6e36a42ccd17",
+              "leftValue": "={{ $json.isValid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2160,
+        -1552
+      ],
+      "id": "1c1b5580-db51-4734-af6c-6ab27af722d5",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I",
+          "mode": "list",
+          "cachedResultName": "datastorage",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "games_table",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "game_id",
+              "lookupValue": "={{ $('When chat message received').item.json.sessionId }}"
+            },
+            {
+              "lookupColumn": "difficulty",
+              "lookupValue": "={{ $('Switch').item.json.difficulty }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1744,
+        -1200
+      ],
+      "id": "ea1b82af-bc0a-4fc1-959b-f4b8e5b4c2e4",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1B3Xb59oQRMs67bt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c4bc552e-3b0b-4dcd-983f-712746fcd275",
+              "leftValue": "={{ $('Get row(s) in sheet').item.json.current_round }}",
+              "rightValue": 10,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2816,
+        -1616
+      ],
+      "id": "c5347e3b-d864-45aa-8596-b7f6ea6b448f",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I",
+          "mode": "list",
+          "cachedResultName": "datastorage",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "games_table",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "game_id": "={{ $('When chat message received').item.json.sessionId }}",
+            "current_round": "={{ $('Get row(s) in sheet').item.json.current_round +1}}",
+            "score": "={{ $('Get row(s) in sheet').item.json.score +$('AI Agent1').item.json.output.userScore}}",
+            "timestamp": "={{ $now }}",
+            "outcome": "={{ $('AI Agent1').item.json.output.userWord }}"
+          },
+          "matchingColumns": [
+            "game_id"
+          ],
+          "schema": [
+            {
+              "id": "game_id",
+              "displayName": "game_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "username",
+              "displayName": "username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "difficulty",
+              "displayName": "difficulty",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "current_round",
+              "displayName": "current_round",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "outcome",
+              "displayName": "outcome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3152,
+        -1632
+      ],
+      "id": "5cf965e7-fece-435e-86ec-a4b51f8049e4",
+      "name": "Game Update",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1B3Xb59oQRMs67bt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "message": "Congratulation you had completed the game.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        3280,
+        -1376
+      ],
+      "id": "8047f8a5-2803-44f4-81a1-687acfff3f3f",
+      "name": "Complete Game Message",
+      "webhookId": "8322b3e6-6e22-47ff-8181-6432a94296ae"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1952,
+        -1824
+      ],
+      "id": "07b74cd2-fb30-4bfb-be26-166634817c07",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "NkThkTVyL2LizWo0",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e8a55fd0-ed5e-40dc-a132-a1f481ee50a4",
+              "leftValue": "={{ $json.output.isValid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2464,
+        -1600
+      ],
+      "id": "e2bae57d-42b9-4199-b3db-e80d07f06846",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "message": "={{ $('AI Agent1').item.json.output.message }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        3456,
+        -1600
+      ],
+      "id": "55a8ef35-703e-4908-b682-09518194c0c2",
+      "name": "Chat5",
+      "webhookId": "345a42de-fe32-45c0-8a5f-1d6045cb5dee"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $('Chat1').first().json.chatInput.toLowerCase().trim();\n\n// Default values\nlet command = \"help\";\nlet difficulty = \"easy\"; \n// Regex to catch \"start\" followed by an optional difficulty\nconst startMatch = input.match(/^start\\s*(easy|medium|hard)?/);\n\nif (startMatch) {\n    command = \"start\";\n    if (startMatch[1]) {\n        difficulty = startMatch[1];\n    }\n} else if (input.includes(\"stats\") || input.includes(\"leaderboard\")) {\n    command = \"stats\";\n} else if (input.includes(\"quit\") || input.includes(\"end\")) {\n    command = \"quit\";\n} else if (input.includes(\"help\")) {\n    command = \"help\";\n}\n\nreturn [{\n    json: {\n        command,\n        difficulty,\n        user_input: input,\n        user_name: $('Information Extractor').first().json.output.user_name,\n        is_command: command !== \"play_word\"\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        544,
+        -496
+      ],
+      "id": "891345a6-c1f5-4ac4-9b96-e5af2b7f77fc",
+      "name": "SplitInput"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I",
+          "mode": "list",
+          "cachedResultName": "datastorage",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1940549072,
+          "mode": "list",
+          "cachedResultName": "player_stats",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I/edit#gid=1940549072"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "username": "={{ $('Information Extractor').item.json.output.user_name }}",
+            "total_games": "={{ $('Get row(s) in sheet').item.json.current_round }}",
+            "best_score": "={{ $('Get row(s) in sheet').item.json.score }}",
+            "avg": "={{ $('Get row(s) in sheet').item.json.score > 0 \n    ? $('Get row(s) in sheet').item.json.score / 10 \n    : 0 }}",
+            "difficulty": "={{ $('Get row(s) in sheet').item.json.difficulty }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "username",
+              "displayName": "username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total_games",
+              "displayName": "total_games",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "best_score",
+              "displayName": "best_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "avg",
+              "displayName": "avg",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "difficulty",
+              "displayName": "difficulty",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3664,
+        -1184
+      ],
+      "id": "d087438c-5603-4225-91d6-112d73b73d4e",
+      "name": "CompleteGameUpdate",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1B3Xb59oQRMs67bt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2f189712-9a04-47d9-b0e3-e19c3972bff4",
+              "leftValue": "={{ $('GetLeaderBoard').item.json}}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1312,
+        -688
+      ],
+      "id": "bdb8726c-af2d-407f-b5bb-c6f18f14a73b",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I",
+          "mode": "list",
+          "cachedResultName": "datastorage",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1940549072,
+          "mode": "list",
+          "cachedResultName": "player_stats",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I/edit#gid=1940549072"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1088,
+        -672
+      ],
+      "id": "c28bb7ad-2f7b-42ad-b700-9911404b88a0",
+      "name": "GetLeaderBoard",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1B3Xb59oQRMs67bt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Check Leader Board  \nIf have any player it will reply the result",
+        "height": 304,
+        "width": 880
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1056,
+        -768
+      ],
+      "typeVersion": 1,
+      "id": "c17410d0-fa8e-4b70-a726-3698a9518016",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "message": "Currently no player let get started.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        1552,
+        -656
+      ],
+      "id": "34aa067c-bb12-4578-b388-c6f6a4ca6e13",
+      "name": "Chat6",
+      "webhookId": "34368234-65fd-4f69-ac7d-e797912af7ed"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I",
+          "mode": "list",
+          "cachedResultName": "datastorage",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "games_table",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fs6e63XDdyf_7bmSa9ZoNH4q6hkHivp68BlLIsQNi-I/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "game_id",
+              "lookupValue": "={{ $('When chat message received').item.json.sessionId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1024,
+        -432
+      ],
+      "id": "8868ef1d-886e-4d52-9e15-ba74863328d7",
+      "name": "GetCurrentStats",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1B3Xb59oQRMs67bt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "83d40d03-cd02-4584-a6c1-e26f96306e9c",
+              "leftValue": "={{ $('GetCurrentStats').item.json}}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1184,
+        -432
+      ],
+      "id": "7a1fcf30-16c8-4a28-8a48-194387c2a3b6",
+      "name": "IfStats"
+    },
+    {
+      "parameters": {
+        "message": "No game started.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        1440,
+        -448
+      ],
+      "id": "80436c42-12d0-4e69-ab87-74ffb4700275",
+      "name": "NoChatStats",
+      "webhookId": "40e500e1-a4f8-42fc-b1a3-60f14e7fc283"
+    },
+    {
+      "parameters": {
+        "message": "=Here are the current stats: \n\nYour Name:  {{ $json.username }}\nWith {{ $json.difficulty }} mode, you had completed {{ $json.current_round }} out of 10 round.\n\nYour total score is {{ $json.score }}.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        1392,
+        -288
+      ],
+      "id": "eaf625a2-fe01-4f92-b280-6dc36e4d1abb",
+      "name": "ChatStats",
+      "webhookId": "2ddea7f4-6461-4144-8aea-13598eed1eb7"
+    },
+    {
+      "parameters": {
+        "content": "Exit",
+        "height": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        848,
+        272
+      ],
+      "typeVersion": 1,
+      "id": "d3872121-4189-487f-bb9b-b5de8a73b243",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "message": "❓ How to Play Word Chain  \n\nRules\n\n  • Each word must start with the last letter of the previous word\n\n  • Words cannot be repeated\n\n  • 10 rounds per game\n\nScoring:\n\n  •10 pts – valid word\n\n  •5 pts – creative/uncommon word\n\n  •1 pt per letter over 5 (length bonus)\n\n  • ×2 multiplier – 3+ creative words in a row\n\nDifficulty:\n\n  • 🟢 Easy – 4-6 letter words\n\n  • 🟡 Medium – 6-8 letter words\n\n  • 🔴 Hard – 8-12 letters, Q/X/Z/J endings bonus\n\nCommands:\n\n  start [easy|medium|hard] – new game\n\n  submit [words]\n\n  stats – your statistics\n\n  leaderboard – top players\n\n  quit – end current game;",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        1392,
+        64
+      ],
+      "id": "07c004d5-63a6-4b6d-abe3-da868d43c7ea",
+      "name": "HelpMessage",
+      "webhookId": "3b48f508-0e53-410f-a3c7-fb5938320cc8"
+    },
+    {
+      "parameters": {
+        "content": "## Help Message",
+        "height": 240,
+        "width": 352
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1280,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "5697fa8f-edca-405e-9058-9e43fdcba038",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Current Player Stats",
+        "height": 384,
+        "width": 736
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        880,
+        -480
+      ],
+      "typeVersion": 1,
+      "id": "6b4fb157-397d-45e6-bba4-b985d37b7546",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "checkRecord",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "GetCurrentStats",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HelpMessage",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Chat3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat1": {
+      "main": [
+        [
+          {
+            "node": "SplitInput",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Chat1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leaderboard Message": {
+      "main": [
+        [
+          {
+            "node": "Chat1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat4": {
+      "main": [
+        [
+          {
+            "node": "WordGameFirstFilter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WordGameFirstFilter": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Submit Error": {
+      "main": [
+        [
+          {
+            "node": "CompleteGameUpdate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invalid Word": {
+      "main": [
+        [
+          {
+            "node": "CompleteGameUpdate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "checkRecord": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Submit Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Chat4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Game Update": {
+      "main": [
+        [
+          {
+            "node": "Chat5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Game Update",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Complete Game Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Complete Game Message": {
+      "main": [
+        [
+          {
+            "node": "CompleteGameUpdate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid Word",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat5": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SplitInput": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CompleteGameUpdate": {
+      "main": [
+        [
+          {
+            "node": "Chat1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "Chat6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Leaderboard Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetLeaderBoard": {
+      "main": [
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat6": {
+      "main": [
+        [
+          {
+            "node": "Chat1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetCurrentStats": {
+      "main": [
+        [
+          {
+            "node": "IfStats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IfStats": {
+      "main": [
+        [
+          {
+            "node": "NoChatStats",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ChatStats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoChatStats": {
+      "main": [
+        [
+          {
+            "node": "Chat1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ChatStats": {
+      "main": [
+        [
+          {
+            "node": "Chat1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HelpMessage": {
+      "main": [
+        [
+          {
+            "node": "Chat1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Kuala_Lumpur",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "7d672691-afa0-4aff-b55b-45a88351ec17",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "52ebfac8aef4211716b4360eda6fda9ea5bf29dddf61fb8e1397e90796be5d28"
+  },
+  "id": "7BU9d7ZiHvKwUCYf",
+  "tags": []
+}
